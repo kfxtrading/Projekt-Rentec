@@ -1,0 +1,22 @@
+# R session files
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# renv local state
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+renv/sandbox/
+renv/staging/
+
+# Strategy outputs
+runs/*
+!runs/.gitkeep
+
+# OS/editor noise
+.DS_Store
+Thumbs.db

@@ -1,0 +1,11 @@
+{
+  "r.rpath.windows": "C:\\Program Files\\R\\R-4.4.2\\bin\\R.exe",
+  "r.rterm.windows": "C:\\Program Files\\R\\R-4.4.2\\bin\\R.exe",
+  "r.alwaysUseActiveTerminal": true,
+  "r.bracketedPaste": true,
+  "r.plot.useHttpgd": true,
+  "r.sessionWatcher": true,
+  "terminal.integrated.env.windows": {
+    "PATH": "C:\\Program Files\\R\\R-4.4.2\\bin;${env:PATH}"
+  }
+}
