@@ -49,6 +49,9 @@ default_strategy_config <- function() {
     run_timestamp = NULL,
     output_dir = NULL,
     resume_checkpoint = TRUE,
+    max_param_sets = NULL,
+    random_seed = 20260501,
+    shuffle_param_grid = FALSE,
     garch_lookback = 500,
     garch_step = 1,
     garch_progress_every = 100,
@@ -83,6 +86,12 @@ normalize_strategy_config <- function(config = list()) {
   config$garch_progress_every <- max(1L, as.integer(config$garch_progress_every))
   config$garch_trend_period <- max(1L, as.integer(config$garch_trend_period))
   config$min_training_rows <- max(1L, as.integer(config$min_training_rows))
+  config$random_seed <- as.integer(config$random_seed)
+  config$shuffle_param_grid <- scalar_true(config$shuffle_param_grid)
+
+  if (!is.null(config$max_param_sets)) {
+    config$max_param_sets <- max(1L, as.integer(config$max_param_sets))
+  }
 
   if (is.null(config$run_timestamp)) {
     config$run_timestamp <- format(Sys.time(), "%Y%m%d_%H%M%S")
@@ -314,7 +323,20 @@ build_param_grid <- function(config) {
     stringsAsFactors = FALSE
   )
 
-  subset(param_grid, f_fast < f_slow)
+  param_grid <- subset(param_grid, f_fast < f_slow)
+
+  if (config$shuffle_param_grid || (!is.null(config$max_param_sets) && config$max_param_sets < nrow(param_grid))) {
+    set.seed(config$random_seed)
+    row_order <- sample.int(nrow(param_grid))
+    param_grid <- param_grid[row_order, , drop = FALSE]
+  }
+
+  if (!is.null(config$max_param_sets) && config$max_param_sets < nrow(param_grid)) {
+    param_grid <- param_grid[seq_len(config$max_param_sets), , drop = FALSE]
+  }
+
+  rownames(param_grid) <- NULL
+  param_grid
 }
 
 parameter_ids <- function(params) {
