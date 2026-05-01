@@ -57,7 +57,9 @@ $SUDO apt-get install -y \
   libblas-dev \
   liblapack-dev \
   libnlopt-dev \
-  libgsl-dev
+  libgsl-dev \
+  libuv1-dev \
+  pkg-config
 
 Rscript -e "if (getRversion() < '4.3.0') stop('R >= 4.3.0 is required for the locked xgboost package. Installed R is ', getRversion(), call. = FALSE); cat('R version OK:', as.character(getRversion()), '\n')"
 
