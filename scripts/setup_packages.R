@@ -15,6 +15,12 @@ if (is.null(repos) || identical(unname(repos["CRAN"]), "@CRAN@")) {
   options(repos = c(CRAN = "https://cloud.r-project.org"))
 }
 
+project_repos <- c(
+  dmlc = "https://dmlc.r-universe.dev",
+  CRAN = "https://cloud.r-project.org"
+)
+options(repos = project_repos)
+
 required_packages <- c(
   "quantmod", "TTR", "scales", "foreach", "doParallel", "dlm",
   "progress", "xgboost", "rugarch", "rmarkdown", "highcharter",
@@ -37,6 +43,24 @@ if (!file.exists(file.path(project_root, "renv", "activate.R"))) {
 }
 
 source(file.path(project_root, "renv", "activate.R"))
+options(repos = project_repos)
+
+message("R version: ", as.character(getRversion()))
+message("R repositories: ", paste(names(getOption("repos")), getOption("repos"), sep = "=", collapse = ", "))
+
+if (getRversion() < "4.3.0") {
+  stop(
+    "R >= 4.3.0 is required for xgboost. Installed R is ",
+    as.character(getRversion()),
+    ". On Ubuntu, rerun scripts/setup_runpod_ubuntu.sh to install R from CRAN.",
+    call. = FALSE
+  )
+}
+
+if (!requireNamespace("xgboost", quietly = TRUE)) {
+  message("Installing xgboost from dmlc R-universe / CRAN...")
+  install.packages("xgboost", repos = project_repos)
+}
 
 missing_packages <- required_packages[
   !vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)
