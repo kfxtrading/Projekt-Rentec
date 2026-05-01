@@ -25,7 +25,7 @@ The setup script installs Ubuntu system libraries, installs the R project packag
 ## Start The Full Optimization
 
 ```bash
-./scripts/run_full_strategy.sh config/default.R
+./scripts/run_full_strategy.sh config/runpod.R
 ```
 
 Watch the log:
