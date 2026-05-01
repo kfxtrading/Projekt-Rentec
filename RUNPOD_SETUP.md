@@ -34,4 +34,10 @@ Watch the log:
 tail -f runs/logs/full_strategy_*.log
 ```
 
+Check status and rough ETA:
+
+```bash
+./scripts/status_run.sh
+```
+
 Outputs are written under `runs/run_<timestamp>/`. The optimization checkpoint is saved as `optimization_checkpoint.rds`, so an interrupted run can continue if the same output folder/checkpoint is reused.
