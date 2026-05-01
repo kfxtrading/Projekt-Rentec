@@ -73,8 +73,12 @@ if (length(missing_packages) > 0L) {
   message("All required project packages are already installed.")
 }
 
-message("Writing renv.lock...")
-renv::snapshot(prompt = FALSE)
+if (identical(Sys.getenv("RENV_SNAPSHOT", "false"), "true")) {
+  message("Writing renv.lock...")
+  renv::snapshot(prompt = FALSE)
+} else {
+  message("Skipping renv.lock snapshot. Set RENV_SNAPSHOT=true to update the lockfile.")
+}
 
 status <- renv::status()
 if (isTRUE(status$synchronized)) {
