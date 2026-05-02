@@ -58,8 +58,14 @@ $SUDO apt-get install -y \
   liblapack-dev \
   libnlopt-dev \
   libgsl-dev \
-  libuv1-dev \
-  pkg-config
+  libuv1-dev
+
+# Ensure a pkg-config implementation is present without conflicting with
+# pre-installed `pkgconf` on newer Ubuntu/RunPod images. pkgconf provides the
+# pkg-config interface, so we install whichever is available.
+if ! command -v pkg-config >/dev/null 2>&1; then
+  $SUDO apt-get install -y pkgconf || $SUDO apt-get install -y pkg-config
+fi
 
 Rscript -e "if (getRversion() < '4.3.0') stop('R >= 4.3.0 is required for the locked xgboost package. Installed R is ', getRversion(), call. = FALSE); cat('R version OK:', as.character(getRversion()), '\n')"
 

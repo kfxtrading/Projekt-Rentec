@@ -23,5 +23,14 @@ strategy_config <- list(
   garch_step = 1,
   garch_progress_every = 100,
   garch_trend_period = 5,
-  min_training_rows = 20
+  min_training_rows = 20,
+  # Money management
+  kelly_fraction = 0.25,
+  combine_lot_models = TRUE,
+  # Phase 1 sampling: ~5.2M full grid -> ~50000 evaluated sets
+  coarse_to_fine = TRUE,
+  coarse_n_samples = 40000L,
+  refine_top_k = 25L,
+  refine_n_samples = 10000L,
+  refine_window_steps = 3L
 )
