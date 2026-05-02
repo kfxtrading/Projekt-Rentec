@@ -27,9 +27,22 @@ if (!exists("strategy_config", envir = config_env, inherits = FALSE)) {
   stop("Config file must define a list named strategy_config.", call. = FALSE)
 }
 
+cfg <- get("strategy_config", envir = config_env, inherits = FALSE)
+
+# Load the walk-forward extension only when the config requests it. This
+# keeps R/strategy.R free of walk-forward logic.
+use_wf <- isTRUE(cfg$walk_forward)
+if (use_wf) {
+  source(file.path(project_root, "R", "strategy_walk_forward.R"))
+}
+
 tryCatch(
   {
-    run_strategy(get("strategy_config", envir = config_env, inherits = FALSE))
+    if (use_wf) {
+      run_strategy_walk_forward(cfg)
+    } else {
+      run_strategy(cfg)
+    }
   },
   error = function(error) {
     message("\nStrategy run failed:")
