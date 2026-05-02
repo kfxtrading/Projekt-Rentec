@@ -117,3 +117,21 @@ ssh runpod-rentec '
 - **Beobachtung:** Robuster als EURUSD (4/5 positive Folds vs 3/5; Chained +65 % vs +40 %). IS-OOS-Gap (+539 % vs +65 %) bleibt aber gross → Phase-1-Overfitting weiterhin präsent. Fold 5 dominanter Beitrag (PF 12.27).
 - **Files:** wie `baseline_wf_v1_20260502_091141`
 
+### `baseline_wf_v1_usdjpy_20260502_184848`
+
+- **Datum:** 2026-05-02 22:48 (Pod), Per-Symbol-Training für USDJPY
+- **Code-State:** Commit `43cf74f`
+- **Config:** [config/runpod_usdjpy.R](config/runpod_usdjpy.R) (`signal_symbol="USDJPY=X"`, Filter `GC=F`)
+- **Beste Parameter (eigene Optimierung, 50k Sets):**
+  - `sma_p=125`, `rsi_p=14`, `rsi_os=30`, `rsi_ob=70`, `f_fast=26`, `f_slow=60`, `use_kalman=TRUE` (erstes Pair mit Kalman!)
+  - Phase-1 FinalEquity (In-Sample): $1.044,77
+- **Final-Backtest (In-Sample):**
+  - Initial $1.000 → Final **$2.968,58** (+196,86 %)
+  - 23 Trades (9 Long, 14 Short) — **deutlich weniger Signale** als EURUSD (84) / GBPUSD (61)
+  - 10-Bar Hit-Rate 65,22 % (Long 55,56 %, Short 71,43 %)
+  - Profit Factor 3,970 (höchster aller Pairs in IS)
+- **Walk-Forward: ⚠️ ÜBERSPRUNGEN** — `Not enough ml_data rows (23) for walk-forward (need >= 60)`
+  - Strategy-Code-Schwelle: `wf_min_train_rows * (n_folds + 1) = 30 * 6 = 60` ML-Zeilen erforderlich, USDJPY hat nur 23
+  - Konsequenz: keine OOS-Validierung möglich. Pair generiert zu wenig Signale für 5-Fold-CV.
+- **Files:** wie `baseline_wf_v1_20260502_091141` aber **ohne `walk_forward/` Unterordner**
+
