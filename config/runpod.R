@@ -32,5 +32,10 @@ strategy_config <- list(
   coarse_n_samples = 40000L,
   refine_top_k = 25L,
   refine_n_samples = 10000L,
-  refine_window_steps = 3L
+  refine_window_steps = 3L,
+  # Walk-forward CV (over ML/MM stage; Phase 1 stays single-pass)
+  walk_forward = TRUE,
+  wf_n_folds = 5L,
+  wf_embargo_bars = NULL,    # defaults to holding_period
+  wf_min_train_rows = 30L
 )
