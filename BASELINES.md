@@ -90,3 +90,30 @@ ssh runpod-rentec '
   - `walk_forward/fold_metrics.{csv,rds}`, `walk_forward/combined_trades.{csv,rds}`, `walk_forward/oos_summary.rds`
   - `walk_forward/fold_NN/{train_set,full_path_trades,fold_trades}.{rds,csv}` (NN = 01..05)
 
+### `baseline_wf_v1_gbpusd_20260502_143643`
+
+- **Datum:** 2026-05-02 18:36 (Pod), Per-Symbol-Training für GBPUSD
+- **Code-State:** Commit `01dda8c` (gleiche WF-Architektur wie EURUSD-Baseline)
+- **Config:** [config/runpod_gbpusd.R](config/runpod_gbpusd.R) (`signal_symbol="GBPUSD=X"`, Filter `GC=F`, sonst identisch zu `runpod.R`)
+- **Beste Parameter (eigene Optimierung, 50k Sets):**
+  - `sma_p=110`, `rsi_p=12`, `rsi_os=30`, `rsi_ob=70`, `f_fast=38`, `f_slow=65`, `use_kalman=FALSE`
+  - Phase-1 FinalEquity (In-Sample): $1.068,55
+- **Final-Backtest (In-Sample, gesamtes Datenfenster):**
+  - Initial $1.000 → Final **$6.390,12** (+539,01 %)
+  - 61 Trades (36 Long, 25 Short)
+  - 10-Bar Hit-Rate 65,57 % (Long 61,11 %, Short 72,00 %)
+- **Walk-Forward OOS (5 Folds, expanding window, Embargo = holding_period):**
+  - Initial $1.000 → Chained Final **$1.654,38** (**+65,44 %**)
+  - Mean per-fold Return: +11,55 % (sd 17,12)
+  - Mean Hit-Rate 56,3 %; Mean Profit Factor 3,59
+  - Per-Fold:
+    | Fold | Train→Test | Trades | Return | PF | End Equity |
+    |---|---|---|---|---|---|
+    | 1 | →2015-06-22 / 2015-07–2018-04 | 6 | +5,07 % | 1,19 | $1.050,68 |
+    | 2 | →2018-04-17 / 2018-05–2019-08 | 6 | −3,54 % | 0,81 | $1.013,43 |
+    | 3 | →2019-08-15 / 2019-09–2021-12 | 6 | +11,77 % | 1,92 | $1.132,72 |
+    | 4 | →2021-12-07 / 2021-12–2023-06 | 5 | +3,89 % | 1,73 | $1.176,77 |
+    | 5 | →2023-06-20 / 2023-07–2025-11 | 7 | +40,59 % | 12,27 | $1.654,38 |
+- **Beobachtung:** Robuster als EURUSD (4/5 positive Folds vs 3/5; Chained +65 % vs +40 %). IS-OOS-Gap (+539 % vs +65 %) bleibt aber gross → Phase-1-Overfitting weiterhin präsent. Fold 5 dominanter Beitrag (PF 12.27).
+- **Files:** wie `baseline_wf_v1_20260502_091141`
+
